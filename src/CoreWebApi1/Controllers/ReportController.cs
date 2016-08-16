@@ -25,12 +25,32 @@ namespace CoreWebApi1.Controllers
             _powerBIOptionsOptions = powerBIOptionsOptions.Value;
         }
 
-        //// GET: api/values
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
+        // GET: api/report
+        [HttpGet]
+        public IEnumerable<object> Get()
+        {
+            //This section just loops through to gather reports.
+            var reportsList = new List<object>();
+
+            using (var client = this.CreatePowerBIClient())
+            {
+                var reportsResponse = client.Reports.GetReports(_powerBIOptionsOptions.WorkspaceCollection, _powerBIOptionsOptions.WorkspaceId);
+
+                for (int i = 0; i<reportsResponse.Value.ToList().Count; i++)
+                {
+                    reportsList.Add(new 
+                    {
+                        Id = reportsResponse.Value[i].Id,
+                        Name = reportsResponse.Value[i].Name,
+                        EmbedUrl = reportsResponse.Value[i].EmbedUrl,
+                        WebUrl = reportsResponse.Value[i].WebUrl,
+                        Report = reportsResponse.Value[i]
+                    });
+                }
+            }
+
+            return reportsList;
+        }
 
         // GET api/report/{reportId}
         [HttpGet("{reportId}")]
@@ -39,7 +59,8 @@ namespace CoreWebApi1.Controllers
             using (var client = this.CreatePowerBIClient())
             {
                 //DateTime tokDatetime = DateTime.Now;
-                string myUserID = "jamiem@csgpro.com"; //must pass in this if role is included.
+                //string myUserID = "jamiem@csgpro.com"; //must pass in this if role is included.
+                string myUserID = "jen@customer.com";
                 //string myUserID = User.Identity.Name.ToString();
                 IEnumerable<string> myRole = new List<string>() { "Customer", "Developer" };
 
