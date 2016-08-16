@@ -7,11 +7,15 @@
 <body>
     <h1>PowerBI Embeded with Angular 2 and .Net Core-ish</h1>
 
-    <div id="chart"></div>
+    <div powerbi-type="report"
+         powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=ebf53f3e-0619-427e-bcee-630d68b94b06"
+         powerbi-access-token="">
+    </div>
 
     <script>
-
-
+        window.addEventListener('DOMContentLoaded', function () {
+            powerbi.init();
+        });
     </script>
 
 </body>
