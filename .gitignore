@@ -1,7 +1,7 @@
 src/CoreWebApi1/**/obj
 src/CoreWebApi1/bin/Debug/net451/*
 src/CoreWebApi1/**/.bin
-src/CoreWebApi1/node_modules
+src/CoreWebApi1/**/node_modules
 src/CoreWebApi1/bin/Debug/net451/CoreWebApi1.exe
 *.pdb
 src/CoreWebApi1/bin/Debug/net451/win7-x64/CoreWebApi1.exe

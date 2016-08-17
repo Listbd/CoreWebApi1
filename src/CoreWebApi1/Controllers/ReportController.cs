@@ -43,8 +43,7 @@ namespace CoreWebApi1.Controllers
                         Id = reportsResponse.Value[i].Id,
                         Name = reportsResponse.Value[i].Name,
                         EmbedUrl = reportsResponse.Value[i].EmbedUrl,
-                        WebUrl = reportsResponse.Value[i].WebUrl,
-                        Report = reportsResponse.Value[i]
+                        WebUrl = reportsResponse.Value[i].WebUrl
                     });
                 }
             }
@@ -69,15 +68,6 @@ namespace CoreWebApi1.Controllers
                 var embedToken = PowerBIToken.CreateReportEmbedToken(_powerBIOptionsOptions.WorkspaceCollection, _powerBIOptionsOptions.WorkspaceId, reportId, myUserID, myRole);
 
                 var accessToken = embedToken.Generate(_powerBIOptionsOptions.AccessKey);
-
-                //var viewModel = new ReportViewModel
-                //{
-                //    Report = report,
-                //    AccessToken = embedToken.Generate(this.accessKey)
-                //};
-
-                //return View(viewModel);
-
 
                 return Ok(new
                 {
