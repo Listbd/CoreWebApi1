@@ -17,15 +17,15 @@ using Microsoft.Rest;
 namespace CoreWebApi1.Controllers
 {
     [Route("api/[controller]")]
-    public class ReportController : Controller
+    public class ReportsController : Controller
     {
         private readonly PowerBIOptions _powerBIOptionsOptions;
-        public ReportController(IOptions<PowerBIOptions> powerBIOptionsOptions)
+        public ReportsController(IOptions<PowerBIOptions> powerBIOptionsOptions)
         {
             _powerBIOptionsOptions = powerBIOptionsOptions.Value;
         }
 
-        // GET: api/report
+        // GET: api/reports
         [HttpGet]
         public IEnumerable<object> Get()
         {
@@ -51,7 +51,7 @@ namespace CoreWebApi1.Controllers
             return reportsList;
         }
 
-        // GET api/report/{reportId}
+        // GET api/reports/{reportId}
         [HttpGet("{reportId}")]
         public async Task<ActionResult> Get(string reportId)
         {

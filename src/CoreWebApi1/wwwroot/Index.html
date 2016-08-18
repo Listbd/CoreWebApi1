@@ -20,9 +20,9 @@
     <script type="text/javascript">
         
         window.onload = function () {
-            $.get("api/report", function (data) {
+            $.get("api/reports", function (data) {
                 var reportId = data[0].id;
-                $.get("api/report/" + reportId, function (data2) {
+                $.get("api/reports/" + reportId, function (data2) {
                     // find the iFrame on the page and handle the loaded event.
                     var iframe = document.getElementById('iFrameEmbedReport');
                     iframe.src = data2.report.embedUrl;
