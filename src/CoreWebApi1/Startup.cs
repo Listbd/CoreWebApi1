@@ -19,7 +19,6 @@ namespace CoreWebApi1
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appSettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appSettings.{env.EnvironmentName}.json", optional: true)
-//                .AddJsonFile("powerBIOptions.json", optional: false, reloadOnChange: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -52,7 +51,6 @@ namespace CoreWebApi1
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
-
         }
     }
 }

@@ -1,28 +1,23 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreWebApi1.Options;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Options;
 using Microsoft.PowerBI.Api.V1;
-using Microsoft.PowerBI.Api.V1.Models;
 using Microsoft.PowerBI.Security;
 using Microsoft.Rest;
-
-// For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CoreWebApi1.Controllers
 {
     [Route("api/[controller]")]
     public class ReportsController : Controller
     {
-        private readonly PowerBIOptions _powerBIOptionsOptions;
+        private readonly PowerBIOptions _powerBIOptions;
         public ReportsController(IOptions<PowerBIOptions> powerBIOptionsOptions)
         {
-            _powerBIOptionsOptions = powerBIOptionsOptions.Value;
+            _powerBIOptions = powerBIOptionsOptions.Value;
         }
 
         // GET: api/reports
@@ -34,9 +29,9 @@ namespace CoreWebApi1.Controllers
 
             using (var client = this.CreatePowerBIClient())
             {
-                var reportsResponse = client.Reports.GetReports(_powerBIOptionsOptions.WorkspaceCollection, _powerBIOptionsOptions.WorkspaceId);
+                var reportsResponse = client.Reports.GetReports(_powerBIOptions.WorkspaceCollection, _powerBIOptions.WorkspaceId);
 
-                for (int i = 0; i<reportsResponse.Value.ToList().Count; i++)
+                for (var i = 0; i<reportsResponse.Value.ToList().Count; i++)
                 {
                     reportsList.Add(new 
                     {
@@ -47,27 +42,24 @@ namespace CoreWebApi1.Controllers
                     });
                 }
             }
-
             return reportsList;
         }
 
-        // GET api/reports/{reportId}
-        [HttpGet("{reportId}")]
-        public async Task<ActionResult> Get(string reportId)
+        // GET api/reports/{reportId}/{userId}
+        [HttpGet("{reportId}/{userId?}")]
+        public async Task<ActionResult> Get(string reportId, string userId = null)
         {
             using (var client = this.CreatePowerBIClient())
             {
-                //DateTime tokDatetime = DateTime.Now;
-                //string myUserID = "jamiem@csgpro.com"; //must pass in this if role is included.
-                string myUserID = "jen@customer.com";
-                //string myUserID = User.Identity.Name.ToString();
+                const string TESTUSER = "jen@customer.com";
+
                 IEnumerable<string> myRole = new List<string>() { "Customer", "Developer" };
 
-                var reportsResponse = await client.Reports.GetReportsAsync(_powerBIOptionsOptions.WorkspaceCollection, _powerBIOptionsOptions.WorkspaceId);
+                var reportsResponse = await client.Reports.GetReportsAsync(_powerBIOptions.WorkspaceCollection, _powerBIOptions.WorkspaceId);
                 var report = reportsResponse.Value.FirstOrDefault(r => r.Id == reportId);
-                var embedToken = PowerBIToken.CreateReportEmbedToken(_powerBIOptionsOptions.WorkspaceCollection, _powerBIOptionsOptions.WorkspaceId, reportId, myUserID, myRole);
-
-                var accessToken = embedToken.Generate(_powerBIOptionsOptions.AccessKey);
+                var embedToken = PowerBIToken.CreateReportEmbedToken(
+                    _powerBIOptions.WorkspaceCollection, _powerBIOptions.WorkspaceId, reportId, userId ?? TESTUSER, myRole);
+                var accessToken = embedToken.Generate(_powerBIOptions.AccessKey);
 
                 return Ok(new
                 {
@@ -79,10 +71,10 @@ namespace CoreWebApi1.Controllers
 
         private IPowerBIClient CreatePowerBIClient()
         {
-            var credentials = new TokenCredentials(_powerBIOptionsOptions.AccessKey, "AppKey");
+            var credentials = new TokenCredentials(_powerBIOptions.AccessKey, "AppKey");
             var client = new PowerBIClient(credentials)
             {
-                BaseUri = new Uri(_powerBIOptionsOptions.ApiUrl)
+                BaseUri = new Uri(_powerBIOptions.ApiUrl)
             };
 
             return client;

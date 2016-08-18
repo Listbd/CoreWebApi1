@@ -5,23 +5,21 @@
     <title>PowerBI Embeded</title>
 </head>
 <body>
-    <h1>PowerBI Embeded with Angular 2 and .Net Core-ish</h1>
+    <h1>PowerBI Embeded with .Net Core (ish)</h1>
 
     <iframe id="iFrameEmbedReport" height="768" width="1024" seamless></iframe>
 
-
-    <!--<input type="hidden" id="MainContent_accessTokenText" value="xxx" />
-    <input type="hidden" id="MainContent_embedUrlText" value="https://embedded.powerbi.com/appTokenReportEmbed?reportId=xxx" />-->
-
+    <!-- alternative way to get values into the page
+    <input type="hidden" id="MainContent_accessTokenText" value="xxx"/>
+    <input type="hidden" id="MainContent_embedUrlText" value="https://embedded.powerbi.com/appTokenReportEmbed?reportId=xxx"/>
+    -->
 
     <!-- Js function to assign iframe embedUrl and access token -->
-
     <script src="js/jquery-1.10.2.js"></script>
-    <script type="text/javascript">
-        
+    <script type="text/javascript">       
         window.onload = function () {
             $.get("api/reports", function (data) {
-                var reportId = data[0].id;
+                var reportId = data[0].id; // just use first report found
                 $.get("api/reports/" + reportId, function (data2) {
                     // find the iFrame on the page and handle the loaded event.
                     var iframe = document.getElementById('iFrameEmbedReport');
@@ -42,13 +40,8 @@
                         iframe.contentWindow.postMessage(message, "*");
                     }
                 });
-
             });
-
-
-
         };
     </script>
-
 </body>
 </html>
